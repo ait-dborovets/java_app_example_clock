@@ -12,6 +12,6 @@ releases:
     - serviceAccount:
         create: false
     - image:
-        repository: 315903692558.dkr.ecr.eu-central-1.amazonaws.com/denysm-test
-        tag: "1.0"
+        repository: "REPOSITORY_URL"
+        tag: "IMAG_TAG"
     wait: true
