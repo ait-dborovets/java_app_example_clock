@@ -35,7 +35,7 @@ jobs:
       env:
         GIT_USER: test  # git user name
         GIT_EMAIL: test@ait.com # git email 
-        ARGO_REPO: argo-repo-name # change this value to the repository with the Argo manifests
+        ARGO_REPO: git@github.com:ait-dborovets/argo-test.git # change this value to the repository with the Argo manifests
         ARGO_APP_FOLDER: argo-test/react # change this value to the folder with relevant manifests for the Application
       run: |
        git config --global user.name $GIT_USER

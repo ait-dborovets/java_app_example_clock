@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest  # runner name : (ubuntu latest version) 
     env:
       AWS_REGION: eu-central-1
-      AWS_ACCOUNT: 123-aws-account-id  # change this value to relevant AWS account ID
+      AWS_ACCOUNT: 935818769908  # change this value to relevant AWS account ID
     steps:
     - name: Set env vars (dev)
       if: endsWith(github.ref, '/dev')
@@ -32,7 +32,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
     - name: Update App Tag
       env:
-        CLUSTER_NAME: eks-cluster-name  # change this value to relevant EKS Cluster Name
+        CLUSTER_NAME: dborovets-playground1-STAGE-EKS  # change this value to relevant EKS Cluster Name
         APP_NAME: react
         CHART_VERSION: 0.1.0
       run: |
