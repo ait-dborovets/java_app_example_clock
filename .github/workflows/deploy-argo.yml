@@ -21,8 +21,10 @@ jobs:
       if: endsWith(github.ref, '/master')
       run: |
         echo "ENV=prod" >> $GITHUB_ENV
+
     - name: Install wget and yq
       run: wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod a+x /usr/local/bin/yq
+
     - name: Setup SSH key  
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}  # Create ssh key in github actions secrets to access Argo repo
@@ -31,6 +33,7 @@ jobs:
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         sudo chmod 600 ~/.ssh/id_rsa
       shell: bash
+      
     - name: Change version and deploy
       env:
         GIT_USER: test  # git user name
