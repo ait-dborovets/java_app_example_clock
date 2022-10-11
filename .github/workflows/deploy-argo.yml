@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: Build Push
+    branches:
+      - dev
+      - master
+    types: completed
+
+jobs:
+
+  deploy_argo:  # job name
+    runs-on: ubuntu-latest  # runner name : (ubuntu latest version) 
+    steps:
+    - name: Set env vars (dev)
+      if: endsWith(github.ref, '/dev')
+      run: |
+        echo "ENV=dev" >> $GITHUB_ENV
+    - name: Set env vars (prod)
+      if: endsWith(github.ref, '/master')
+      run: |
+        echo "ENV=prod" >> $GITHUB_ENV
+    - name: Install wget and yq
+      run: wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod a+x /usr/local/bin/yq
+    - name: Setup SSH key  
+      env:
+        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}  # Create ssh key in github actions secrets to access Argo repo
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        sudo chmod 600 ~/.ssh/id_rsa
+      shell: bash
+    - name: Change version and deploy
+      env:
+        GIT_USER: test  # git user name
+        GIT_EMAIL: test@ait.com # git email 
+        ARGO_REPO: argo-repo-name # change this value to the repository with the Argo manifests
+        ARGO_APP_FOLDER: argo-test/react # change this value to the folder with relevant manifests for the Application
+      run: |
+       git config --global user.name $GIT_USER
+       git config --global user.email $GIT_EMAIL
+       git clone -b master $ARGO_REPO
+       cd $ARGO_APP_FOLDER
+       yq e -i '.image.tag = "'$GITHUB_REF_NAME-$GITHUB_SHA'"' $ENV-values.yaml
+       git commit -am "update image tag" && git push origin master
+       
+       
+ 
+      
+      
